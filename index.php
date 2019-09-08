@@ -8,7 +8,23 @@
 <!--<meta http-equiv="Content=Security-Policy" content="script-src *.housesandholds.com">-->
 <!--<meta http-equiv="refresh" content="5">-->
 <script>
-
+function onSignIn(googleUser){
+  var profile = googleUser.getBasicProfile();
+  $(".landingPage").css("display","none");
+  $(".userDashboard").css("display","block");
+  $(".activeGame").css("display","none");
+  $("#user_pic").attr('src',profile.getImageUrl());
+  $("#user_email").text(profile.getEmail());
+  var post = {};
+  post.user_email = profile.getEmail();
+  //post.user_email = "madeup@email.com";
+  $.ajax({
+    url: "http://housesandholds.com/index.php",
+    method: "post",
+    data: post,
+    success: function(res){ console.log(res); }
+  })
+}
 
 function signOut() {
   var auth2 = gapi.auth2.getAuthInstance();
@@ -51,26 +67,6 @@ display: none;
 </head>
 <body>
 
-  <script>
-  function onSignIn(googleUser){
-    var profile = googleUser.getBasicProfile();
-    $(".landingPage").css("display","none");
-    $(".userDashboard").css("display","block");
-    $(".activeGame").css("display","none");
-    $("#user_pic").attr('src',profile.getImageUrl());
-    $("#user_email").text(profile.getEmail());
-    var post = {};
-    post.user_email = profile.getEmail();
-    //post.user_email = "madeup@email.com";
-    $.ajax({
-      url: "http://housesandholds.com/index.php",
-      method: "post",
-      data: post,
-      success: function(res){ console.log(res); }
-    })
-  }
-  </script>
-
 <div class="landingPage">
 <h1>Houses and Holds</h1>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
@@ -95,15 +91,13 @@ if (mysqli_errno($connect)) {
 die('<p>Failed to connect to MySQL: '.mysql_error().'</p>');
 } else {
 
-$user_email = $_POST["user_email"];
-//header("Refresh:0");
-echo "<p>Hello, ".$user_email."</p>";
-
-
-function varUserEmail(){
-  $user_email = $_POST["user_email"];
+if($_POST){
+  echo "post";
+} else {
+  echo "no post";
 };
-echo "<p><button class='btn btn-default' onclick='varUserEmail'>Load email on variable</button></p>";
+$user_email = $_POST["user_email"];
+echo "<p>Hello, ".$user_email."</p>";
 
 // Look for user in db, add if not found
 $sql_a = "SELECT * FROM users WHERE email = '";
@@ -132,16 +126,16 @@ if($result->num_rows > 0){
 };
 
 // Replace user email with dummy account for testing
-//$user_email = "madeup@email.com";
+$user_email = "madeup@email.com";
+$user_id = 3;
 
 // Grab user characters
-$sql_a = "SELECT characters.id, characters.name, users.email FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.email = '";
+$sql_a = "SELECT * FROM characters  WHERE user_id = '";
 $sql_z = "' AND characters.death_date IS NULL";
-$sql = "{$sql_a}{$user_email}{$sql_z}";
+$sql = "{$sql_a}{$user_id}{$sql_z}";
 
 $result = mysqli_query($connect, $sql);
 if($result->num_rows > 0){
-echo "<p>Click your character to play.</p>";
 echo "<table><tr><th>Living character</th></tr>";
 while($row = $result->fetch_assoc()){
 $character_id = $row["id"];
