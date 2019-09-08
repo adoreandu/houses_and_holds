@@ -15,9 +15,10 @@
 </head>
 <body>
 
-<div class="landingPage">
-  <h1>Houses and Holds</h1>
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+<div class="activeGame">
+<h1>Houses and Holds</h1>
+<button class="btn btn-warning" onclick="stopPlay();">Stop playing</button>
+<button class="btn btn-danger" onclick="signOut();">Sign out</button>
 </div>
 
 </body>

@@ -1,8 +1,5 @@
 function onSignIn(googleUser){
   var profile = googleUser.getBasicProfile();
-  $(".landingPage").css("display","none");
-  $(".userDashboard").css("display","block");
-  $(".activeGame").css("display","none");
   $("#user_pic").attr('src',profile.getImageUrl());
   $("#user_email").text(profile.getEmail());
   var post = {};
@@ -14,4 +11,5 @@ function onSignIn(googleUser){
     data: post,
     success: function(res){ console.log(res); }
   })
+  window.location.href = "dashboard.php";
 }
